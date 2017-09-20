@@ -1,21 +1,28 @@
 import sys
 import datetime
 import pygame as pg
+from lockedBody import LockedBody
 from time import sleep
 
 class Game():
     """ A class to run the game loop, handle window size and
         calculate time between update steps """
 
-    def __init__(self, width=640, height=480, minDt=5):
+    def __init__(self, width=320, height=240, minDt=5):
         """ Initialises the screen size and minimum step delay(milliseconds)"""
-        
+        pg.init()
         self.width    = width
         self.height   = height
         self.minDt    = minDt
         self.gameOver = False
         self.screen   = pg.display.set_mode((self.width, self.height), 
                         pg.HWSURFACE|pg.DOUBLEBUF|pg.RESIZABLE)
+        self.lockedBodies = []
+        self.lockedBodies.append(LockedBody())
+    
+    def worldToScreen(self, pos):
+        return (pos[0] + self.width, pos[1] + self.height)
+        
     
     def step(self, dt):
         """ Computes one game step or tick, dt being the 
@@ -23,12 +30,16 @@ class Game():
             
         black = (0, 0, 0)
         self.screen.fill(black)
-        pg.draw.circle(self.screen, pg.Color(255,255,0,255), (self.width/2, self.height/2), 20)
+        # Render bodies
+        for body in self.lockedBodies:
+            body.draw(self.screen, self.worldToScreen(body.position))
+        
         pg.display.flip()
     
     def gameLoop(self):
         """ Loops until gameOver is set to true. A minimum time between updates
             is enforced, and elapsed time is calculated to an approximate value. """
+            
         taken = self.minDt
         while not self.gameOver:
             for event in pg.event.get():
