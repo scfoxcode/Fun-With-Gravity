@@ -9,7 +9,7 @@ class Game():
         calculate time between update steps """
 
     def __init__(self, width=320, height=240, minDt=5):
-        """ Initialises the screen size and minimum step delay(milliseconds)"""
+        """ Initialises the screen size and minimum step delay(milliseconds) """
         pg.init()
         self.width    = width
         self.height   = height
@@ -17,12 +17,18 @@ class Game():
         self.gameOver = False
         self.screen   = pg.display.set_mode((self.width, self.height), 
                         pg.HWSURFACE|pg.DOUBLEBUF|pg.RESIZABLE)
+                        
         self.lockedBodies = []
-        self.lockedBodies.append(LockedBody())
+        self.lockedBodies.append(LockedBody(radius=20, color=pg.Color(255,255,0,255)))
+        self.lockedBodies.append(LockedBody(position=(100,0), radius=10, color=pg.Color(0,0,255,255)))
+        self.lockedBodies.append(LockedBody(position=(30,30), radius=5, color=pg.Color(255,255,255,255)))
+        
+        # Set parent of moon to earth
+        self.lockedBodies[2].setParent(self.lockedBodies[1])
     
     def worldToScreen(self, pos):
-        return (pos[0] + self.width, pos[1] + self.height)
-        
+        """ Converts a world position to a screen position, requires tuple for x and y """
+        return (pos[0] + self.width/2, pos[1] + self.height/2)  
     
     def step(self, dt):
         """ Computes one game step or tick, dt being the 
@@ -32,7 +38,7 @@ class Game():
         self.screen.fill(black)
         # Render bodies
         for body in self.lockedBodies:
-            body.draw(self.screen, self.worldToScreen(body.position))
+            body.draw(self.screen, self.worldToScreen(body.getWorldPosition()))
         
         pg.display.flip()
     

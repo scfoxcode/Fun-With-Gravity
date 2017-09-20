@@ -7,7 +7,7 @@ class Drawable(object):
         self.radius = radius
     
     def draw(self, surface, pos):
-        pg.draw.circle(surface, pg.Color(255,255,0,255), 
-                       (pos[0]/2, pos[1]/2), self.radius)
+        pg.draw.circle(surface, self.color, 
+                      (pos[0], pos[1]), self.radius)
     
     
