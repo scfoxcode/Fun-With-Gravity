@@ -5,9 +5,9 @@ class LockedBody(Drawable):
     """ A locked body is used to represent a stationary object
         or one that follows a well defined path. It may have
         mass and therfore gravity, but is not affected
-        by any forces"""
+        by any forces """
     
-    def __init__(self, position=(0,0), mass=1.0, radius=10, color=pg.Color(255,255,255,255)):
+    def __init__(self, position=(0,0), .mass=1.0, radius=10, color=pg.Color(255,255,255,255)):
         self.position   = position # This is local to parent if a parent exists
         self.mass       = mass
         self.radius     = radius
