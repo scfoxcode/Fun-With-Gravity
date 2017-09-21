@@ -22,18 +22,48 @@ class Game():
     
     def setupSystem(self):
         self.lockedBodies = [
-            LockedBody(radius=20, color=pg.Color(255,255,0,255)),
-            LockedBody(position=(100,0), radius=10, color=pg.Color(0,0,255,255), speed=-1),
-            LockedBody(position=(20,20), radius=5, color=pg.Color(255,255,255,255) ,speed=-3)
+            LockedBody(radius=25, color=pg.Color(255,255,0,255)),
+            LockedBody(position=(150,0), radius=10, color=pg.Color(0,0,255,255), speed=-1),
+            LockedBody(position=(14,14), radius=5, color=pg.Color(255,255,255,255) ,speed=-3),
+            LockedBody(position=(24,-24), radius=2, color=pg.Color(180,180,240,255) ,speed=-2),
+            LockedBody(position=(-60, 0), radius=6, color=pg.Color(255,128,0,255) ,speed=-3),
+            LockedBody(position=(220, 220), radius=18, color=pg.Color(255,70,20,255) ,speed=-0.3),
+            LockedBody(position=(40, 40), radius=5, color=pg.Color(50,255,100,255) ,speed=-1),
+            LockedBody(position=(55,-55), radius=4, color=pg.Color(200,40,255,255) ,speed=-0.8),
+            LockedBody(position=(30,0), radius=7, color=pg.Color(200,200,255,255) ,speed=-3)
         ]
         
-        # Set parent of moon to earth
+        # Set parent of moon 1 to habitable
         self.lockedBodies[2].setParent(self.lockedBodies[1])
         self.lockedBodies[2].setPath(CircularPath())
         
-        # Set earth parent to moon
+        # Set parent of moon 2 to habitable
+        self.lockedBodies[3].setParent(self.lockedBodies[1])
+        self.lockedBodies[3].setPath(CircularPath())
+        
+        # Set habitable parent to sun
         self.lockedBodies[1].setParent(self.lockedBodies[0])
         self.lockedBodies[1].setPath(CircularPath())
+        
+        # Set inner parent to sun
+        self.lockedBodies[4].setParent(self.lockedBodies[0])
+        self.lockedBodies[4].setPath(CircularPath())
+        
+        # Set gas giant parent to sun
+        self.lockedBodies[5].setParent(self.lockedBodies[0])
+        self.lockedBodies[5].setPath(CircularPath())
+        
+        # Set moon 3 parent to gas giant
+        self.lockedBodies[6].setParent(self.lockedBodies[5])
+        self.lockedBodies[6].setPath(CircularPath())
+        
+        # Set moon 4 parent to gas giant
+        self.lockedBodies[7].setParent(self.lockedBodies[5])
+        self.lockedBodies[7].setPath(CircularPath())
+        
+        # Set moon 5 parent to gas giant
+        self.lockedBodies[8].setParent(self.lockedBodies[5])
+        self.lockedBodies[8].setPath(CircularPath())
     
     def worldToScreen(self, pos):
         """ Converts a world position to a screen position, requires tuple for x and y """
