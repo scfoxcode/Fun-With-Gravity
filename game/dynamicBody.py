@@ -1,4 +1,5 @@
 from vec2D import Vec2D
+import math
 
 class DynamicBody():
     """ A dynamic body is used to represent an object that
@@ -10,6 +11,7 @@ class DynamicBody():
         self.position  = position
         self.velocity  = velocity
         self.radius    = radius
+        self.collided  = False
     
     def update(self, lockedBodies, dt):
         """ Updates velocity and applies to position based on all
@@ -21,5 +23,16 @@ class DynamicBody():
             acceleration = dt*self.gConstant*body.mass/max(10, displacementSquared) # min radius 10 to prevent crazy acceleration
             self.velocity = self.velocity + Vec2D.scale(direction, acceleration)
             self.position = self.position + self.velocity
+            
+            # Have we collided
+            if not self.collided:
+                actualDisplacement = math.sqrt(displacementSquared)
+                if actualDisplacement < (self.radius + body.radius):
+                    self.collided = True # Collision has occured
+    
+    def hasCollided(self):
+        """ returns the collided flag, used to delete object """
+        return self.collided
+            
 
         

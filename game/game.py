@@ -106,7 +106,7 @@ class Game():
             body.update(lockedPhysicsList, dt)
             self.drawCircle(self.screen, (body.position), 
                             pg.Color(255,255,255,255), body.radius)  
-            if Vec2D.magnitudeSquared(body.position) > 1000000: # Out of game area
+            if Vec2D.magnitudeSquared(body.position) > 1000000 or body.hasCollided(): # Out of game area
                 del self.dynamicBodies[index]
         
         pg.display.flip()
