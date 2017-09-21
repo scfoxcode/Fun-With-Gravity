@@ -7,7 +7,7 @@ class LockedBody():
         by any forces """
     
     def __init__(self, position=(0,0), mass=1.0, speed=1, radius=10, color=pg.Color(255,255,255,255), parent=None):
-        self.position   = position # This is local to parent if a parent exists
+        self.position   = position # Position is relative to parent if a parent exists
         self.speed      = speed
         self.mass       = mass
         self.radius     = radius
