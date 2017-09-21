@@ -1,4 +1,5 @@
 import pygame as pg
+from vec2D import Vec2D
 
 class LockedBody():
     """ A locked body is used to represent a stationary object
@@ -6,7 +7,7 @@ class LockedBody():
         mass and therefore gravity, but is not affected
         by any forces """
     
-    def __init__(self, position=(0,0), mass=1.0, speed=1, radius=10, color=pg.Color(255,255,255,255), parent=None):
+    def __init__(self, position=Vec2D(0,0), mass=1.0, speed=1, radius=10, color=pg.Color(255,255,255,255), parent=None):
         self.position   = position # Position is relative to parent if a parent exists
         self.speed      = speed
         self.mass       = mass
@@ -43,7 +44,7 @@ class LockedBody():
         position = self.position
         if self.parentBody:
             position = self.parentBody.getWorldPosition()
-            position = (position[0] + self.position[0],
-                        position[1] + self.position[1])
+            position = position + self.position
+
         return position
         

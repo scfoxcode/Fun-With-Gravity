@@ -4,6 +4,7 @@ from userInput import UserInput
 from lockedBody import LockedBody
 from circularPath import CircularPath
 from time import sleep, clock
+from vec2D import Vec2D
 
 class Game():
     """ A class to run the game loop, handle window size and
@@ -27,19 +28,19 @@ class Game():
         self.rootBody  = LockedBody(radius=35, color=pg.Color(255,255,0,255))
         
         # Create planets
-        innerPlanet    = LockedBody(position=(-70, 0)  , radius=6 , color=pg.Color(255,128,0,255) ,speed=-3)
-        middlePlanet   = LockedBody(position=(150,0)   , radius=10, color=pg.Color(0,0,255,255)   , speed=-1)
-        outerPlanet    = LockedBody(position=(220, 220), radius=18, color=pg.Color(255,70,20,255) ,speed=-0.3)
+        innerPlanet    = LockedBody(position=Vec2D(-70, 0)  , radius=6 , color=pg.Color(255,128,0,255) ,speed=-3)
+        middlePlanet   = LockedBody(position=Vec2D(150,0)   , radius=10, color=pg.Color(0,0,255,255)   , speed=-1)
+        outerPlanet    = LockedBody(position=Vec2D(220, 220), radius=18, color=pg.Color(255,70,20,255) ,speed=-0.3)
         self.rootBody.addChild(innerPlanet)
         self.rootBody.addChild(middlePlanet)
         self.rootBody.addChild(outerPlanet)
         
         # Add moons
-        middlePlanet.addChild(LockedBody(position=(14,14) , radius=5, color=pg.Color(255,255,255,255) ,speed=-3))
-        middlePlanet.addChild(LockedBody(position=(24,-24), radius=2, color=pg.Color(180,180,240,255) ,speed=-2))
-        outerPlanet.addChild (LockedBody(position=(40, 40), radius=5, color=pg.Color(50,255,100,255)  ,speed=-1))
-        outerPlanet.addChild (LockedBody(position=(55,-55), radius=4, color=pg.Color(200,40,255,255)  ,speed=-0.8))
-        outerPlanet.addChild (LockedBody(position=(30,0)  , radius=7, color=pg.Color(200,200,255,255) ,speed=-3))
+        middlePlanet.addChild(LockedBody(position=Vec2D(14,14) , radius=5, color=pg.Color(255,255,255,255) ,speed=-3))
+        middlePlanet.addChild(LockedBody(position=Vec2D(24,-24), radius=2, color=pg.Color(180,180,240,255) ,speed=-2))
+        outerPlanet.addChild (LockedBody(position=Vec2D(40, 40), radius=5, color=pg.Color(50,255,100,255)  ,speed=-1))
+        outerPlanet.addChild (LockedBody(position=Vec2D(55,-55), radius=4, color=pg.Color(200,40,255,255)  ,speed=-0.8))
+        outerPlanet.addChild (LockedBody(position=Vec2D(30,0)  , radius=7, color=pg.Color(200,200,255,255) ,speed=-3))
         
         # Setup parents
         for body in self.rootBody:
@@ -53,11 +54,11 @@ class Game():
         
     def worldToScreen(self, pos):
         """ Converts a world position to a screen position, requires tuple for x and y """
-        return (int(pos[0]) + self.width/2, int(pos[1]) + self.height/2)  
+        return Vec2D(int(pos.x) + self.width/2, int(pos.y) + self.height/2)  
         
     def drawCircle(self, surface, pos, color, radius):
         screenPos = self.worldToScreen(pos)
-        pg.draw.circle(surface, color, (screenPos[0], screenPos[1]), radius)
+        pg.draw.circle(surface, color, (screenPos.x, screenPos.y), radius)
     
     def step(self, dt):
         """ Computes one game step or tick, dt being the 
