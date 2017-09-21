@@ -17,6 +17,14 @@ class UserInput():
         
     def updateDynamicPosition(self, position):
         self.body.position = position
+        
+    def releaseBody(self, position):
+        power     = Vec2D.magnitude(self.clickPosition-position)
+        powerLvl  = min(1, min(100, power))*0.1
+        direction = Vec2D.normalize(self.clickPosition-position)
+        self.body.velocity = Vec2D.scale(direction, powerLvl)
+        self.gameRef.addDynamicBody(self.body)
+        self.body = None
     
     def update(self):
         x, y = pg.mouse.get_pos()
@@ -27,9 +35,9 @@ class UserInput():
             self.clickPosition = mousePos
             self.createDynamicBody(mousePos)
         elif not left and self.leftMouse: # On mouse Up
-            print("temp")
+            self.releaseBody(mousePos)
 
-        if self.leftMouse:
+        if self.body and self.leftMouse:
             self.updateDynamicPosition(mousePos)
         
         self.leftMouse, self.middleMouse, self.rightMouse = (left, middle, right)

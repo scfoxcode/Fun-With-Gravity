@@ -22,10 +22,22 @@ class Vec2D():
     
     @staticmethod
     def magnitudeSquared(vec):
-        return Vec2D(x**x, y**y)
+        return vec.x**2 + vec.y**2
     
     @staticmethod
     def magnitude(vec):
         value = Vec2D.magnitudeSquared(vec)
         return math.sqrt(value)
+    
+    @staticmethod
+    def scale(vec, value):
+        return Vec2D(vec.x*value, vec.y*value)
+        
+    @staticmethod
+    def normalize(vec):
+        size = max(1, Vec2D.magnitude(vec))
+        return  Vec2D.scale(vec, 1.0/size)
+        
+    
+        
         

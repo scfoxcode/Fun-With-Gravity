@@ -21,6 +21,7 @@ class Game():
                         pg.HWSURFACE|pg.DOUBLEBUF|pg.RESIZABLE)
         pg.display.set_caption("Fun-With-Gravity")
         self.input = UserInput()
+        self.input.gameRef = self
         self.setupSystem()   
     
     def setupSystem(self):        
@@ -52,6 +53,12 @@ class Game():
             if body != self.rootBody:
                 body.setPath(CircularPath())
                 
+        # Create empty list for dynamic bodies
+        self.dynamicBodies = []
+        
+    def addDynamicBody(self, body):
+        self.dynamicBodies.append(body)
+                
     def screenToWorld(self, pos):
         """ Converts a screen position to a world position """
         return Vec2D(pos.x - self.width/2, pos.y - self.height/2)  
@@ -71,16 +78,30 @@ class Game():
         black = (0, 0, 0)
         self.screen.fill(black)
         
+        # Handle body drag creation
         self.input.update()
         if self.input.body:
-            body = self.input.body
+            body   = self.input.body
+            clickP = self.input.clickPosition
+            pg.draw.line(self.screen, pg.Color(255,255,255,255),
+                        (clickP.x, clickP.y), (body.position.x, body.position.y), 1)
             self.drawCircle(self.screen, self.screenToWorld(body.position), 
-                            pg.Color(255,255,255,255), body.radius)
+                            pg.Color(255,255,255,255), body.radius)                 
+        
+        lockedPhysicsList = [] # Used for dynamic calculations and collisions
         
         # Iterate over tree, update and draw
         for body in self.rootBody:
             body.update(dt)
-            self.drawCircle(self.screen, body.getWorldPosition(), body.color, body.radius)
+            bodyPos = body.getWorldPosition()
+            self.drawCircle(self.screen, bodyPos, body.color, body.radius)
+            lockedPhysicsList.append(body)
+            
+        # Update and draw all dynamic bodies
+        for body in self.dynamicBodies:
+            body.update(lockedPhysicsList, dt)
+            self.drawCircle(self.screen, self.screenToWorld(body.position), 
+                            pg.Color(255,255,255,255), body.radius)  
         
         pg.display.flip()
     

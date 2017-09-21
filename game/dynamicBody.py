@@ -15,7 +15,11 @@ class DynamicBody():
         """ Updates velocity and applies to position based on all
         the locked bodies in the system """
         for body in lockedBodies:
-            displacementSquared = Vec2D.magnitudeSquared(self.position - body.getWorldPosition())
+            rawDisplace = body.getWorldPosition() - self.position
+            direction = Vec2D.normalize(rawDisplace)
+            displacementSquared = Vec2D.magnitudeSquared(rawDisplace)
             acceleration = dt*self.gConstant*body.mass/max(1, displacementSquared)
+            self.velocity = self.velocity + Vec2D.scale(direction, acceleration)
+            self.position = self.position + self.velocity
 
         
