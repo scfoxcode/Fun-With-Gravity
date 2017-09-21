@@ -24,24 +24,25 @@ class Game():
         self.input.gameRef = self
         self.setupSystem()   
     
-    def setupSystem(self):        
+    def setupSystem(self):   
+        """ Defines the bodies in the solar system, initialises the system tree and creates an empty list for dynamic bodies """
         # Create the sun
-        self.rootBody  = LockedBody(radius=35, color=pg.Color(255,255,0,255))
+        self.rootBody  = LockedBody(radius=35, color=pg.Color(255,255,0,255), mass=1.0)
         
         # Create planets
-        innerPlanet    = LockedBody(position=Vec2D(-70, 0)  , radius=6 , color=pg.Color(255,128,0,255) ,speed=-3)
-        middlePlanet   = LockedBody(position=Vec2D(150,0)   , radius=10, color=pg.Color(0,0,255,255)   , speed=-1)
-        outerPlanet    = LockedBody(position=Vec2D(220, 220), radius=18, color=pg.Color(255,70,20,255) ,speed=-0.3)
+        innerPlanet    = LockedBody(position=Vec2D(-70, 0)  , radius=6 , color=pg.Color(255,128,0,255), speed=-1.5  , mass=0.5)
+        middlePlanet   = LockedBody(position=Vec2D(150,0)   , radius=10, color=pg.Color(0,0,255,255)  , speed=-0.5  , mass=0.5)
+        outerPlanet    = LockedBody(position=Vec2D(220, 220), radius=18, color=pg.Color(255,70,20,255), speed=-0.15 , mass=0.5)
         self.rootBody.addChild(innerPlanet)
         self.rootBody.addChild(middlePlanet)
         self.rootBody.addChild(outerPlanet)
         
         # Add moons
-        middlePlanet.addChild(LockedBody(position=Vec2D(14,14) , radius=5, color=pg.Color(255,255,255,255) ,speed=-3))
-        middlePlanet.addChild(LockedBody(position=Vec2D(24,-24), radius=2, color=pg.Color(180,180,240,255) ,speed=-2))
-        outerPlanet.addChild (LockedBody(position=Vec2D(40, 40), radius=5, color=pg.Color(50,255,100,255)  ,speed=-1))
-        outerPlanet.addChild (LockedBody(position=Vec2D(55,-55), radius=4, color=pg.Color(200,40,255,255)  ,speed=-0.8))
-        outerPlanet.addChild (LockedBody(position=Vec2D(30,0)  , radius=7, color=pg.Color(200,200,255,255) ,speed=-3))
+        middlePlanet.addChild(LockedBody(position=Vec2D(14,14) , radius=5, color=pg.Color(255,255,255,255), speed=-1.5 , mass=0.2))
+        middlePlanet.addChild(LockedBody(position=Vec2D(24,-24), radius=2, color=pg.Color(180,180,240,255), speed=-1   , mass=0.2))
+        outerPlanet.addChild (LockedBody(position=Vec2D(40, 40), radius=5, color=pg.Color(50,255,100,255) , speed=-0.5 , mass=0.2))
+        outerPlanet.addChild (LockedBody(position=Vec2D(55,-55), radius=4, color=pg.Color(200,40,255,255) , speed=-0.4 , mass=0.2))
+        outerPlanet.addChild (LockedBody(position=Vec2D(30,0)  , radius=7, color=pg.Color(200,200,255,255), speed=-1.5 , mass=0.2))
         
         # Setup parents
         for body in self.rootBody:
@@ -57,6 +58,8 @@ class Game():
         self.dynamicBodies = []
         
     def addDynamicBody(self, body):
+        """ Apends a dynamic body to the dynamic bodies in list.
+        Once in the list the object will be updated and drawn """
         self.dynamicBodies.append(body)
                 
     def screenToWorld(self, pos):
@@ -68,6 +71,7 @@ class Game():
         return Vec2D(pos.x + self.width/2, pos.y + self.height/2)  
         
     def drawCircle(self, surface, pos, color, radius):
+        """ Uses a world position to draw a circle in the world space """
         screenPos = self.worldToScreen(pos)
         pg.draw.circle(surface, color, (int(screenPos.x), int(screenPos.y)), radius)
     
@@ -98,10 +102,12 @@ class Game():
             lockedPhysicsList.append(body)
             
         # Update and draw all dynamic bodies
-        for body in self.dynamicBodies:
+        for index, body in enumerate(self.dynamicBodies):
             body.update(lockedPhysicsList, dt)
-            self.drawCircle(self.screen, self.screenToWorld(body.position), 
+            self.drawCircle(self.screen, (body.position), 
                             pg.Color(255,255,255,255), body.radius)  
+            if Vec2D.magnitudeSquared(body.position) > 1000000: # Out of game area
+                del self.dynamicBodies[index]
         
         pg.display.flip()
     
@@ -123,6 +129,7 @@ class Game():
         sys.exit()
     
     def screenResize(self, data):
+        """ Updates the width and height on screen resize """
         self.width, self.height = data.dict["size"]
         self.screen = pg.display.set_mode((self.width, self.height), 
                       pg.HWSURFACE|pg.DOUBLEBUF|pg.RESIZABLE) 

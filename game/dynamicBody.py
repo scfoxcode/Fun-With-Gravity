@@ -6,7 +6,7 @@ class DynamicBody():
     but are effected by the mass of LockedBodies """
     
     def __init__(self, position=Vec2D(0,0), velocity=Vec2D(0, 0), radius=3):
-        self.gConstant = 10
+        self.gConstant = 2
         self.position  = position
         self.velocity  = velocity
         self.radius    = radius
@@ -18,7 +18,7 @@ class DynamicBody():
             rawDisplace = body.getWorldPosition() - self.position
             direction = Vec2D.normalize(rawDisplace)
             displacementSquared = Vec2D.magnitudeSquared(rawDisplace)
-            acceleration = dt*self.gConstant*body.mass/max(1, displacementSquared)
+            acceleration = dt*self.gConstant*body.mass/max(10, displacementSquared) # min radius 10 to prevent crazy acceleration
             self.velocity = self.velocity + Vec2D.scale(direction, acceleration)
             self.position = self.position + self.velocity
 

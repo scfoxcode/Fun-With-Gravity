@@ -1,7 +1,8 @@
 import math
 
 class Vec2D():
-    
+    """ Defines a simple 2D vector class, limitted functionality, 
+    functions were added as needed """
     def __init__(self, x=0, y=0):
         self.x = x
         self.y = y
