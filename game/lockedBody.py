@@ -1,5 +1,6 @@
 import pygame as pg
 from vec2D import Vec2D
+from dynamicBody import DynamicBody
 
 class LockedBody():
     """ A locked body is used to represent a stationary object
@@ -44,7 +45,5 @@ class LockedBody():
         position = self.position
         if self.parentBody:
             position = self.parentBody.getWorldPosition()
-            position = position + self.position
-
-        return position
+        return position + self.position
         

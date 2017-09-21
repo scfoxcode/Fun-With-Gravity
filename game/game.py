@@ -51,14 +51,18 @@ class Game():
         for body in self.rootBody:
             if body != self.rootBody:
                 body.setPath(CircularPath())
+                
+    def screenToWorld(self, pos):
+        """ Converts a screen position to a world position """
+        return Vec2D(pos.x - self.width/2, pos.y - self.height/2)  
         
     def worldToScreen(self, pos):
-        """ Converts a world position to a screen position, requires tuple for x and y """
-        return Vec2D(int(pos.x) + self.width/2, int(pos.y) + self.height/2)  
+        """ Converts a world position to a screen position """
+        return Vec2D(pos.x + self.width/2, pos.y + self.height/2)  
         
     def drawCircle(self, surface, pos, color, radius):
         screenPos = self.worldToScreen(pos)
-        pg.draw.circle(surface, color, (screenPos.x, screenPos.y), radius)
+        pg.draw.circle(surface, color, (int(screenPos.x), int(screenPos.y)), radius)
     
     def step(self, dt):
         """ Computes one game step or tick, dt being the 
@@ -68,6 +72,10 @@ class Game():
         self.screen.fill(black)
         
         self.input.update()
+        if self.input.body:
+            body = self.input.body
+            self.drawCircle(self.screen, self.screenToWorld(body.position), 
+                            pg.Color(255,255,255,255), body.radius)
         
         # Iterate over tree, update and draw
         for body in self.rootBody:

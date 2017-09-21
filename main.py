@@ -1,4 +1,4 @@
-# Hello zerolight, regards Stephen
+# Hello zerolight, regards Stephen Surtees
 import game.game as app
 
 def main():
