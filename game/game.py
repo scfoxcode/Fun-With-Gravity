@@ -1,5 +1,6 @@
 import sys
 import pygame as pg
+from map import Map
 from userInput import UserInput
 from lockedBody import LockedBody
 from circularPath import CircularPath
@@ -26,34 +27,13 @@ class Game():
     
     def setupSystem(self):   
         """ Defines the bodies in the solar system, initialises the system tree and creates an empty list for dynamic bodies """
-        # Create the sun
-        self.rootBody  = LockedBody(radius=35, color=pg.Color(255,255,0,255), mass=1.0)
+        map = Map()
+        self.rootBody = map.importMap()
         
-        # Create planets
-        innerPlanet    = LockedBody(position=Vec2D(-70, 0)  , radius=6 , color=pg.Color(255,128,0,255), speed=-1.5  , mass=0.5)
-        middlePlanet   = LockedBody(position=Vec2D(150,0)   , radius=10, color=pg.Color(0,0,255,255)  , speed=-0.5  , mass=0.5)
-        outerPlanet    = LockedBody(position=Vec2D(220, 220), radius=18, color=pg.Color(255,70,20,255), speed=-0.15 , mass=0.5)
-        self.rootBody.addChild(innerPlanet)
-        self.rootBody.addChild(middlePlanet)
-        self.rootBody.addChild(outerPlanet)
-        
-        # Add moons
-        middlePlanet.addChild(LockedBody(position=Vec2D(14,14) , radius=5, color=pg.Color(255,255,255,255), speed=-1.5 , mass=0.2))
-        middlePlanet.addChild(LockedBody(position=Vec2D(24,-24), radius=2, color=pg.Color(180,180,240,255), speed=-1   , mass=0.2))
-        outerPlanet.addChild (LockedBody(position=Vec2D(40, 40), radius=5, color=pg.Color(50,255,100,255) , speed=-0.5 , mass=0.2))
-        outerPlanet.addChild (LockedBody(position=Vec2D(55,-55), radius=4, color=pg.Color(200,40,255,255) , speed=-0.4 , mass=0.2))
-        outerPlanet.addChild (LockedBody(position=Vec2D(30,0)  , radius=7, color=pg.Color(200,200,255,255), speed=-1.5 , mass=0.2))
-        
-        # Setup parents
-        for body in self.rootBody:
-            for child in body.children:
-                child.parentBody = body
-        
-        # Circular paths for all except sun
         for body in self.rootBody:
             if body != self.rootBody:
                 body.setPath(CircularPath())
-                
+        
         # Create empty list for dynamic bodies
         self.dynamicBodies = []
         
@@ -78,7 +58,7 @@ class Game():
     def step(self, dt):
         """ Computes one game step or tick, dt being the 
             approx time elapsed since the previous tick """
-         
+
         black = (0, 0, 0)
         self.screen.fill(black)
         
